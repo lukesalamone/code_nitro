@@ -20,6 +20,7 @@ And that's it.
 ## 🎬 Demo
 ![demonstration of the capabilities of code nitro](demo.png)
 
+[Source](https://en.wikipedia.org/wiki/Fast_inverse_square_root)
 
 ## ⭐Features
 There are three main features.
