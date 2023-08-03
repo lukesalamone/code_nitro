@@ -58,7 +58,7 @@ def main(args):
 
     lexer = get_lexer_for_filename(fname)
     result = pygments.highlight(text, lexer, formatter)
-    name_part = '.'.join(args.input.split('.')[:-1])
+    name_part = '.'.join(fname.split('.')[:-1])
     outname = f'{name_part}.png'
     with open(outname, 'wb') as f:
         f.write(result)

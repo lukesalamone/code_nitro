@@ -37,3 +37,7 @@ nitro my_code.py --lines=5-10
 ```
 
 3. Download a file from GitHub and convert it to an image. You don't need to do anything special, just include the url in place of the filename.
+
+```bash
+nitro https://github.com/lukesalamone/code_nitro/blob/master/nitro.py
+```
