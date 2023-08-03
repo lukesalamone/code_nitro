@@ -1,9 +1,9 @@
-# Code Nitro
+# 🔥Code Nitro
 Ever want to share your code as an image? Code Nitro can do that. Code Nitro is lightweight, has only two dependencies, and works online and offline.
 
 Don't send your code to third parties, use Code Nitro.
 
-## Installation
+## 🛠️Installation
 Clone this repo to somewhere cool, install the dependencies, and add an alias to your `.bash_profile` (or whichever profile file you use).
 
 ```bash
@@ -17,11 +17,11 @@ source ~/.bash_profile
 
 And that's it.
 
-## Demo
+## 🎬 Demo
 ![demonstration of the capabilities of code nitro](demo.png)
 
 
-## Features
+## ⭐Features
 There are three main features.
 
 1. Convert an entire file to an image. Code Nitro will save it in the same directory with the same name (but with .png).
