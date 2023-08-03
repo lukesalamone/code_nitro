@@ -1,7 +1,7 @@
 # Code Nitro
 Ever want to share your code as an image? Code Nitro can do that. Code Nitro is lightweight, has only two dependencies, and works online and offline.
 
-Don't need to send your code to third parties, use Code Nitro.
+Don't send your code to third parties, use Code Nitro.
 
 ## Installation
 Clone this repo to somewhere cool, install the dependencies, and add an alias to your `.bash_profile` (or whichever profile file you use).
