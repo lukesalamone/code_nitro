@@ -1,5 +1,5 @@
-# 🔥Code Nitro
-Ever want to share your code as an image? Code Nitro can do that. Code Nitro is lightweight, has only two dependencies, and works online and offline.
+# 🔥Code Nitro: Code -> Image from the Command Line
+Ever want to share your code as an image? Code Nitro can do that. Code Nitro is lightweight, has minimal dependencies, and works online and offline.
 
 Don't send your code to third parties, use Code Nitro.
 
@@ -23,7 +23,7 @@ And that's it.
 [Source](https://en.wikipedia.org/wiki/Fast_inverse_square_root)
 
 ## ⭐Features
-There are three main features.
+There are three main features. (There are four items because the last one isn't really a feature.)
 
 1. Convert an entire file to an image. Code Nitro will save it in the same directory with the same name (but with .png).
 
@@ -42,3 +42,5 @@ nitro my_code.py --lines=5-10
 ```bash
 nitro https://github.com/lukesalamone/code_nitro/blob/master/nitro.py
 ```
+
+4. You can remove the shadow and gradient by passing `--plain`.
