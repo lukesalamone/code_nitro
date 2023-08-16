@@ -1,4 +1,4 @@
-# 🔥Code Nitro: Code -> Image from the Command Line
+# 🔥Code Nitro: Code to Image from the Command Line
 Ever want to share your code as an image? Code Nitro can do that. Code Nitro is lightweight, has minimal dependencies, and works online and offline.
 
 Don't send your code to third parties, use Code Nitro.
