@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nitro"
+version = "1.0"
+authors = [
+  { name="Luke Salamone", email="lukesalamone94@gmail.com" },
+]
+description = "Code to image from the command line"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Software Development :: Code to Image",
+    "Topic :: Utilities",
+]
+dynamic = ["scripts", "dependencies"]
+
+[project.urls]
+"Homepage" = "https://github.com/lukesalamone/code_nitro"
+"Bug Tracker" = "https://github.com/lukesalamone/code_nitro/issues"

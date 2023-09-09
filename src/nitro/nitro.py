@@ -58,7 +58,13 @@ def get_range(lines_str):
     start, end = [int(x) for x in scope]
     return start, end
 
-def main(args):
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input', type=str, help='the file to use')
+    parser.add_argument('--lines', type=str, help='range of lines to print (defaults to all)')
+    parser.add_argument('--plain', action='store_true', help='exclude shadow and gradient')
+    args = parser.parse_args()
+    
     if 'http://' in args.input or 'https://' in args.input:
         text, fname = load_from_github(args.input)
     else:
@@ -97,9 +103,4 @@ def main(args):
         print(f'saved image to {outname}')
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('input', type=str, help='the file to use')
-    parser.add_argument('--lines', type=str, help='range of lines to print (defaults to all)')
-    parser.add_argument('--plain', action='store_true', help='exclude shadow and gradient')
-    args = parser.parse_args()
-    main(args)
+    main()
