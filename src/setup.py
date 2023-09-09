@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-    name='nitro',
+    name='codenitro',
     version='1.0',
-    packages=['nitro'],
+    packages=['codenitro'],
     install_requires=[
         'Pillow>=10.0.0',
         'Pygments>=2.15.1',

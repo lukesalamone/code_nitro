@@ -4,21 +4,16 @@ Ever want to share your code as an image? Code Nitro can do that. Code Nitro is 
 Don't send your code to third parties, use Code Nitro.
 
 ## 🛠️Installation
-Clone this repo to somewhere cool, install the dependencies, and add an alias to your `.bash_profile` (or whichever profile file you use).
+You can install the `nitro` command with pip.
 
 ```bash
-cd ~/Desktop
-git clone ...
-cd code_nitro
-python3 -m pip install -r requirements.txt
-echo "alias nitro=\"python3 $(pwd)/nitro.py\"" >> ~/.bash_profile
-source ~/.bash_profile
+pip install codenitro
 ```
 
 And that's it.
 
 ## 🎬 Demo
-![demonstration of the capabilities of code nitro](demo.png)
+![demonstration of the capabilities of code nitro](https://raw.githubusercontent.com/lukesalamone/code_nitro/master/demo.png)
 
 [Source](https://en.wikipedia.org/wiki/Fast_inverse_square_root)
 
