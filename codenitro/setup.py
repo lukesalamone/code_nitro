@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='codenitro',
-    version='1.0.1',
+    version='1.0.2',
     packages=['codenitro'],
     install_requires=[
         'Pillow>=10.0.0',
