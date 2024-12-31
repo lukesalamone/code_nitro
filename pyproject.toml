@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codenitro"
-version = "1.0.2"
+version = "1.0.3"
 authors = [
   { name="Luke Salamone", email="lukesalamone94@gmail.com" },
 ]
@@ -22,8 +22,15 @@ classifiers = [
     "Topic :: Software Development :: Documentation",
     "Topic :: Utilities",
 ]
-dynamic = ["scripts", "dependencies"]
+dependencies = [
+    "Pillow>=10.0.0",
+    "Pygments>=2.15.1",
+    "requests>=2.31.0"
+]
 
 [project.urls]
 "Homepage" = "https://github.com/lukesalamone/code_nitro"
 "Bug Tracker" = "https://github.com/lukesalamone/code_nitro/issues"
+
+[project.scripts]
+nitro = "codenitro.nitro:main"
