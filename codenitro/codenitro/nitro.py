@@ -2,7 +2,6 @@ import pygments
 from pygments.styles import get_style_by_name
 from pygments.formatters import ImageFormatter
 from pygments.lexers import get_lexer_for_filename
-import PIL
 from PIL import Image, ImageDraw, ImageFilter, ImageEnhance
 import requests
 import argparse
@@ -64,7 +63,7 @@ def main():
     parser.add_argument('--lines', type=str, help='range of lines to print (defaults to all)')
     parser.add_argument('--plain', action='store_true', help='exclude shadow and gradient')
     args = parser.parse_args()
-    
+
     if 'http://' in args.input or 'https://' in args.input:
         text, fname = load_from_github(args.input)
     else:

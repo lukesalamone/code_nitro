@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='codenitro',
-    version='1.0',
+    version='1.0.1',
     packages=['codenitro'],
     install_requires=[
         'Pillow>=10.0.0',
@@ -11,7 +11,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'nitro = nitro.nitro:main',
+            'nitro = codenitro.nitro:main',
         ],
     },
 )
