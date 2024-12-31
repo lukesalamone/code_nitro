@@ -13,8 +13,8 @@ def add_shadow_and_gradient(image_data):
         gradient = Image.new('RGBA', size, color=0)
         draw = ImageDraw.Draw(gradient)
 
-        start = (253, 46, 216)
-        end = (23, 214, 255)
+        start = (9, 175, 212)
+        end = (52, 26, 110)
         deltas = [(b - a) / gradient.width / 2 for a, b in zip(start, end)]
         for i, color in enumerate(range(gradient.width * 2)):
             color = [round(s + d * i) for s,d in zip(start, deltas)]
@@ -22,7 +22,7 @@ def add_shadow_and_gradient(image_data):
         return gradient
     image = Image.open(io.BytesIO(image_data))
     image = ImageEnhance.Color(image).enhance(2)
-    pad_x, pad_y, offset_x, offset_y = 30, 30, 8, 8
+    pad_x, pad_y, offset_x, offset_y = 100, 100, 8, 8
     width, height = image.size
 
     bottom_canvas = add_gradient((width+pad_x, height+pad_y))
