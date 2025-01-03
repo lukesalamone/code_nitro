@@ -9,7 +9,14 @@ _DEFAULT_CONFIG = {
     'theme':'desert',
 
     # padding around code portion of image
-    'image_pad': 100
+    'image_pad': 100,
+
+    # these properties will be overridden by "theme" if it is set
+    'text_style':'coffee',
+    'image_path':'images/desert.png',
+    'background': 'image',
+    'gradient_start': '#09afd4',
+    'gradient_end': '#341a6e'
 }
 
 _DEFAULT_THEMES = {
@@ -53,9 +60,6 @@ _DEFAULT_THEMES = {
     }
 }
 
-class BlankNamespace:
-    pass
-
 class Config:
     '''
     Configurations will be prioritized in the following order:
@@ -67,11 +71,37 @@ class Config:
     be created on first run.
     '''
 
-    def __init__(self, command_line_args: Union[Namespace, None] = None):
-        self._command_line_args = command_line_args if command_line_args else BlankNamespace()
-        self._system_config = self._load_system_config()
+    def __init__(self, command_line_args: Union[Namespace, dict] = {}):
         self._themes = self._load_themes()
-        self._reconcile_configs()
+        self._parse_default_config()
+        self._parse_system_config(self._load_system_config())
+        self._parse_command_line_args(command_line_args)
+
+    def _parse_config(self, conf):
+        '''
+        Properties from the theme will be overridden if they are directly specified.
+        '''
+        if 'theme' in conf:
+            theme = conf['theme']
+            if theme not in self._themes:
+                raise ValueError(
+                    f'Theme {theme} not found in themes! (Available: {list(self._themes.keys())})'
+                )
+            for k,v in self._themes[theme].items():
+                setattr(self, k, v)
+        for k,v in conf.items():
+            setattr(self, k, v)
+
+    def _parse_default_config(self):
+        self._parse_config(_DEFAULT_CONFIG)
+
+    def _parse_system_config(self, config):
+        self._parse_config(config)
+
+    def _parse_command_line_args(self, args):
+        args = args if type(args) == dict else vars(args)
+        args = {k:v for k,v in args.items() if v not in (None, '', -1)}
+        self._parse_config(args)
 
     def _load_system_config(self):
         system_config_dir = os.path.expanduser(_SYSTEM_CONFIG_DIR)
@@ -94,46 +124,6 @@ class Config:
         with open(system_themes_path) as f:
             return json.load(f)
 
-    def _reconcile_configs(self):
-        def reconcile_single(name):
-            if hasattr(self._command_line_args, name) and getattr(self._command_line_args, name) is not None:
-                return getattr(self._command_line_args, name)
-            if hasattr(self, name):
-                return getattr(self, name)
-            elif name in self._system_config:
-                return self._system_config[name]
-            else:
-                return _DEFAULT_CONFIG.get(name, None)
-
-        def apply_theme_conf():
-            if self.theme not in self._themes:
-                raise ValueError(f'Theme {self.theme} not found in themes! (Available: {list(self._themes.keys())})')
-            for k,v in self._themes[self.theme].items():
-                setattr(self, k, v)
-
-        self.theme = reconcile_single('theme')
-        apply_theme_conf()
-
-        self.text_style = reconcile_single('text_style')
-        self.image_path = reconcile_single('image_path')
-        self.background = reconcile_single('background')
-
-        self.gradient_start = reconcile_single('gradient_start')
-        self.gradient_end = reconcile_single('gradient_end')
-        self.image_pad = reconcile_single('image_pad')
-
-    def get_theme_property(self, theme_name, val, key):
-        if key == 'text_style':
-            return self.text_style if val == '' else val
-        elif key == 'image_path':
-            return self.image_path if val == '' else val
-        elif key == 'background':
-            return self.image_path if val == '' else val
-        elif key == 'gradient_start':
-            return self.image_path if val == '' else val
-        elif key == 'gradient_end':
-            return self.image_path if val == '' else val
-        elif key == 'image_pad':
-            return self.image_pad if val == -1 else val
-        else:
-            raise ValueError(f'Unknown key `{key}`')
+__all__ = [
+    'Config'
+]

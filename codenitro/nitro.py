@@ -1,65 +1,10 @@
-import pygments
-from pygments.styles import get_style_by_name
-from pygments.formatters import ImageFormatter
-from pygments.lexers import get_lexer_for_filename
-from PIL import Image, ImageDraw, ImageFilter, ImageEnhance, ImageColor
+from typing import Union
+from PIL import Image
 import requests
 import argparse
-import math
-import io
 
 from config import Config
-
-def add_shadow_and_gradient(
-        image_data,
-        background=None,
-        gradient_start='#fff',
-        gradient_end='#000',
-        image_path='',
-        image_pad=0):
-    def add_gradient(size):
-        gradient = Image.new('RGBA', size, color=0)
-        draw = ImageDraw.Draw(gradient)
-
-        start: tuple[int, ...] = ImageColor.getcolor(gradient_start, "RGB")
-        end: tuple[int, ...] = ImageColor.getcolor(gradient_end, "RGB")
-        deltas = [(b - a) / gradient.width / 2 for a, b in zip(start, end)]
-        for i, color in enumerate(range(gradient.width * 2)):
-            color = [round(s + d * i) for s,d in zip(start, deltas)]
-            draw.line([(i, 0), (0, i)], tuple(color), width=1)
-        return gradient
-    def add_image(size):
-        canvas = Image.new('RGBA', size, (255, 255, 255, 0))
-        bg_image = Image.open(image_path).convert("RGBA")
-        x_offset = (size[0] - bg_image.width) // 2
-        y_offset = (size[1] - bg_image.height) // 2
-        canvas.paste(bg_image, (x_offset, y_offset), bg_image)
-        return canvas
-    def make_shadow(code_dims, img_dims, offset_dims):
-        shadow = Image.new('RGBA', code_dims, (20, 20, 20, 255))
-        shadow_holder = Image.new('RGBA', img_dims, (0,0,0,0))
-        shadow_holder.paste(shadow, offset_dims)
-        shadow_holder = shadow_holder.filter(ImageFilter.GaussianBlur(6))
-        return shadow_holder
-    image = Image.open(io.BytesIO(image_data))
-    image = ImageEnhance.Color(image).enhance(2)
-    pad_x, pad_y = image_pad, image_pad
-    offset_x, offset_y = 8, 8
-    width, height = image.size
-
-    if background == 'gradient':
-        bottom_canvas = add_gradient((width+pad_x, height+pad_y))
-    else:
-        bottom_canvas = add_image((width+pad_x, height+pad_y))
-
-    shadow = make_shadow(
-        code_dims=(width, height),
-        img_dims=(width+pad_x, height+pad_y),
-        offset_dims=(pad_x//2+offset_x, pad_y//2+offset_y)
-    )
-    bottom_canvas.paste(shadow, (0, 0), mask=shadow)
-    bottom_canvas.paste(image, (pad_x//2, pad_y//2))
-    return bottom_canvas
+from painter import Painter
 
 def load_from_github(url) -> tuple[str, str]:
     def convert_url(url):
@@ -87,33 +32,51 @@ def get_range(lines_str) -> tuple[int, int]:
     return start, end
 
 def code_to_image(
-        file_input=None,
-        text_input=None,
-        link_input=None,
-        line_range=None,
-        theme='desert',
-        text_style='',
-        background='',
-        gradient_start='',
-        gradient_end='',
-        image_path='',
-        image_pad=-1,
-        outpath=None,
-        save=True):
+        file_input: Union[str, None] = None,
+        text_input: Union[str, None] = None,
+        link_input: Union[str, None] = None,
+        line_range: Union[str, None] = None,
+        theme: str = 'desert',
+        text_style: str = '',
+        background: str = '',
+        gradient_start: str = '',
+        gradient_end: str = '',
+        image_path: str = '',
+        image_pad: int = -1,
+        outpath: str = '',
+        save: bool = True):
+    """
+    Convert code from a file, text input, or GitHub link to an image.
+
+    :param file_input: Path to the source file.
+    :param text_input: Code as a string.
+    :param link_input: URL of a GitHub repository.
+    :param line_range: Range of lines to include in the output (e.g., '1-5').
+    :param theme: Pygments theme for syntax highlighting.
+    :param text_style: Style for the text color and background.
+    :param background: Background style ('gradient', 'image' or 'none').
+    :param gradient_start: Start color for gradient.
+    :param gradient_end: End color for gradient.
+    :param image_path: Path to an image to be added in background (requires background='image').
+    :param image_pad: Padding around the code in pixels.
+    :param outpath: Output file path. If not specified, defaults to 'default_filename.png' or
+        <input path>.png depending on input type.
+    :param save: Whether to save the output to a file.
+    """
     if len([x for x in [file_input, text_input, link_input] if x]) != 1:
         raise ValueError(
             'Exactly one of file_input, text_input, or link_input must be specified.'
         )
 
-    # user-specified theme will override sub-properties
-    if theme:
-        config = Config()
-        text_style = config.get_theme_property(theme, text_style, 'text_style')
-        background = config.get_theme_property(theme, background, 'background')
-        gradient_start = config.get_theme_property(theme, gradient_start, 'gradient_start')
-        gradient_end = config.get_theme_property(theme, gradient_end, 'gradient_end')
-        image_path = config.get_theme_property(theme, image_path, 'image_path')
-        image_pad = config.get_theme_property(theme, image_pad, 'image_pad')
+    config = Config({
+        'theme':theme,
+        'text_style':text_style,
+        'background':background,
+        'gradient_start':gradient_start,
+        'gradient_end':gradient_end,
+        'image_path':image_path,
+        'image_pad':image_pad
+    })
 
     fname = 'default_filename.py'
     if text_input:
@@ -125,6 +88,9 @@ def code_to_image(
         else:
             text, fname = load_from_file(file_input)
         lines = text.split('\n')
+
+    name_part = '.'.join(fname.split('.')[:-1])
+
     start = 1
     line_count = len(lines)
     if line_range:
@@ -132,32 +98,29 @@ def code_to_image(
         print(f'including only lines in range {start} - {end}')
         text = '\n'.join(lines[start-1:end])
 
-    line_number_chars = int(math.log10(line_count) + 1)
-    style = get_style_by_name(text_style)
-    formatter = ImageFormatter(
-        style=style,
-        line_number_chars=line_number_chars,
-        line_number_start=start,
-        line_number_bg=style.background_color,
-        image_pad=20,
-        line_number_separator=False,
-        full=True)
+    painter = Painter(image_pad=config.image_pad)
+    painter.add_code_image(
+        text=text,
+        line_count=line_count,
+        text_style=config.text_style,
+        filename=fname,
+        line_num_start=start
+    )
 
-    lexer = get_lexer_for_filename(fname)
-    result = pygments.highlight(text, lexer, formatter)
-    name_part = '.'.join(fname.split('.')[:-1])
 
     if not outpath:
         outpath = f'{name_part}.png'
 
-    if background != 'none':
-        result = add_shadow_and_gradient(
-            image_data=result,
-            background=background,
-            gradient_start=gradient_start,
-            gradient_end=gradient_end,
-            image_path=image_path,
-            image_pad=image_pad)
+    if config.background in ('image', 'gradient'):
+        if config.background == 'image':
+            painter.add_background_image(image_path=config.image_path)
+        else:
+            painter.add_background_gradient(
+                gradient_start=config.gradient_start,
+                gradient_end=config.gradient_end
+            )
+        painter.add_shadow()
+        result = painter.squash_layers()
 
     if not save:
         return result
@@ -177,8 +140,11 @@ def main():
     parser.add_argument('--lines', type=str, help='range of lines to print (defaults to all)')
     parser.add_argument('--theme', type=str, help='theme to use')
     parser.add_argument('--text_style', type=str, help='text color scheme')
+    parser.add_argument('--background', type=str, help='image / gradient / none')
+    parser.add_argument('--gradient_start', type=str, help='top left color for gradient, hex format')
+    parser.add_argument('--gradient_end', type=str, help='bottom right color for gradient, hex format')
+    parser.add_argument('--image_path', type=str, help='if background="image", path to background image')
     parser.add_argument('--image_pad', type=int, help='padding around code in pixels')
-    parser.add_argument('--background', type=str, help='gradient / none')
     args = parser.parse_args()
 
     config = Config(command_line_args=args)
@@ -200,9 +166,7 @@ def main():
         gradient_start=config.gradient_start,
         gradient_end=config.gradient_end,
         image_path=config.image_path,
-        image_pad=config.image_pad,
-        outpath=None,
-        save=True
+        image_pad=config.image_pad
     )
 
 if __name__ == '__main__':
