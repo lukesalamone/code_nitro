@@ -21,23 +21,23 @@ nitro myfile.cpp
 ```bash
 nitro nitro.py --lines=40-54 --theme=desert
 ```
-![Demonstration of desert theme](example_images/desert.png)
+![Demonstration of desert theme](https://raw.githubusercontent.com/lukesalamone/code_nitro/refs/heads/master/example_images/desert.png)
 ```bash
 nitro nitro.py --lines=40-54 --theme=forest
 ```
-![Demonstration of desert theme](example_images/forest.png)
+![Demonstration of desert theme](https://raw.githubusercontent.com/lukesalamone/code_nitro/refs/heads/master/example_images/forest.png)
 ```bash
 nitro nitro.py --lines=40-54 --theme=moon
 ```
-![Demonstration of desert theme](example_images/moon.png)
+![Demonstration of desert theme](https://raw.githubusercontent.com/lukesalamone/code_nitro/refs/heads/master/example_images/moon.png)
 ```bash
 nitro nitro.py --lines=40-54 --theme=blue
 ```
-![Demonstration of desert theme](example_images/blue.png)
+![Demonstration of desert theme](https://raw.githubusercontent.com/lukesalamone/code_nitro/refs/heads/master/example_images/blue.png)
 ```bash
 nitro nitro.py --lines=40-54 --theme=cool
 ```
-![Demonstration of desert theme](example_images/cool.png)
+![Demonstration of desert theme](https://raw.githubusercontent.com/lukesalamone/code_nitro/refs/heads/master/example_images/cool.png)
 
 ## ⭐Features
 

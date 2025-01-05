@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codenitro"
-version = "1.0.3"
+version = "1.1.1"
 authors = [
   { name="Luke Salamone", email="lukesalamone94@gmail.com" },
 ]
@@ -34,3 +34,6 @@ dependencies = [
 
 [project.scripts]
 nitro = "codenitro.nitro:main"
+
+[tool.setuptools]
+packages = ["codenitro"]
