@@ -183,7 +183,7 @@ def main():
         gradient_end=config.gradient_end,
         image_path=config.image_path,
         image_pad=config.image_pad,
-        outpath=args.outpath
+        outpath=args.outpath,
     )
 
 
