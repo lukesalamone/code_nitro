@@ -160,6 +160,7 @@ def main():
         "--image_path", type=str, help='if background="image", path to background image'
     )
     parser.add_argument("--image_pad", type=int, help="padding around code in pixels")
+    parser.add_argument("--outpath", type=str, help="output file path")
     args = parser.parse_args()
 
     config = Config(command_line_args=args)
@@ -182,6 +183,7 @@ def main():
         gradient_end=config.gradient_end,
         image_path=config.image_path,
         image_pad=config.image_pad,
+        outpath=args.outpath
     )
 
 

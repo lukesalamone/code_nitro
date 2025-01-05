@@ -247,3 +247,4 @@ Temporary Items
 *.icloud
 
 codenitro/nitro.png
+build_example_images.sh

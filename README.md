@@ -10,20 +10,34 @@ You can install the `nitro` command with pip.
 pip install codenitro
 ```
 
-And that's it.
-
-## 🎬 Demo
-![demonstration of the capabilities of code nitro](https://raw.githubusercontent.com/lukesalamone/code_nitro/master/demo.png)
-
-[Source](https://en.wikipedia.org/wiki/Fast_inverse_square_root)
+## 🎬 Examples
+```bash
+nitro nitro.py --lines=40-54 --theme=desert
+```
+![Demonstration of desert theme](example_images/desert.png)
+```bash
+nitro nitro.py --lines=40-54 --theme=forest
+```
+![Demonstration of desert theme](example_images/forest.png)
+```bash
+nitro nitro.py --lines=40-54 --theme=moon
+```
+![Demonstration of desert theme](example_images/moon.png)
+```bash
+nitro nitro.py --lines=40-54 --theme=blue
+```
+![Demonstration of desert theme](example_images/blue.png)
+```bash
+nitro nitro.py --lines=40-54 --theme=cool
+```
+![Demonstration of desert theme](example_images/cool.png)
 
 ## ⭐Features
-There are three main features. (There are four items because the last one isn't really a feature.)
 
-1. Convert an entire file to an image. Code Nitro will save it in the same directory with the same name (but with .png).
+1. Convert an entire file to an image via command line. Nitro will save it in the same directory with the same name (but with .png).
 
 ```bash
-nitro my_code.py
+nitro my_code.py [options]
 ```
 
 2. Convert only part of a file by using `--lines`. For example, `--lines=5-10` will print lines 5 through 10, inclusive.
@@ -32,10 +46,12 @@ nitro my_code.py
 nitro my_code.py --lines=5-10
 ```
 
-3. Download a file from GitHub and convert it to an image. You don't need to do anything special, just include the url in place of the filename.
+3. Download a file from GitHub and convert it to an image by including the url in place of the filename.
 
 ```bash
 nitro https://github.com/lukesalamone/code_nitro/blob/master/nitro.py
 ```
 
-4. You can remove the shadow and gradient by passing `--plain`.
+## 🎨 Themes
+
+Nitro comes with a few themes out of the box. Creating your own theme is easy as well. Just update your theme file in `~/.config/codenitro/themes.json`

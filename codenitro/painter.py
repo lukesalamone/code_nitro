@@ -42,7 +42,6 @@ class Painter:
         image_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), image_path
         )
-        print("image_path", image_path)
         size = self._calc_canvas_size()
         canvas = Image.new("RGBA", size, (255, 255, 255, 0))
         bg_image = Image.open(image_path).convert("RGBA")
