@@ -6,8 +6,8 @@ import argparse
 from config import Config
 from painter import Painter
 
-def load_from_github(url) -> tuple[str, str]:
-    def convert_url(url):
+def load_from_github(url: str) -> tuple[str, str]:
+    def convert_url(url: str):
         return '/'.join(url.split('/blob/')).replace('github.com/', 'raw.githubusercontent.com/')
 
     assert 'github.com' in url, 'input url is not from github'
@@ -20,13 +20,13 @@ def load_from_github(url) -> tuple[str, str]:
         print(f'failed to download from url {url}')
         return '', ''
 
-def load_from_file(fname) -> tuple[str, str]:
+def load_from_file(fname: str) -> tuple[str, str]:
     with open(fname) as f:
         text = f.read()
     return text, fname
 
-def get_range(lines_str) -> tuple[int, int]:
-    scope = lines_str.split('-')
+def get_range(lines: str) -> tuple[int, int]:
+    scope = lines.split('-')
     assert len(scope) == 2, 'incorrect format for lines arg'
     start, end = [int(x) for x in scope]
     return start, end
@@ -44,7 +44,7 @@ def code_to_image(
         image_path: str = '',
         image_pad: int = -1,
         outpath: str = '',
-        save: bool = True):
+        save: bool = True) -> Image.Image:
     """
     Convert code from a file, text input, or GitHub link to an image.
 
@@ -107,7 +107,6 @@ def code_to_image(
         line_num_start=start
     )
 
-
     if not outpath:
         outpath = f'{name_part}.png'
 
@@ -121,15 +120,14 @@ def code_to_image(
             )
         painter.add_shadow()
         result = painter.squash_layers()
+    else:
+        result = painter.code_image
 
     if not save:
         return result
 
     with open(outpath, 'wb') as f:
-        if isinstance(result, Image.Image):
-            result.save(f)
-        else:
-            f.write(result)
+        result.save(f)
         print(f'saved image to {outpath}')
 
     return result

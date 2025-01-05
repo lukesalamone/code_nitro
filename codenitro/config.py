@@ -60,7 +60,18 @@ _DEFAULT_THEMES = {
     }
 }
 
-class Config:
+class DefaultConfig:
+    def __init__(self):
+        self.theme = 'desert'
+        self.text_style = 'monokai'
+        self.image_pad = 100
+        self.background = 'image'
+        self.image_path = 'images/desert.png'
+        self.background = 'image'
+        self.gradient_start = '#09afd4'
+        self.gradient_end = '#341a6e'
+
+class Config(DefaultConfig):
     '''
     Configurations will be prioritized in the following order:
         1. command-line arguments (highest)
@@ -72,6 +83,7 @@ class Config:
     '''
 
     def __init__(self, command_line_args: Union[Namespace, dict] = {}):
+        super().__init__()
         self._themes = self._load_themes()
         self._parse_default_config()
         self._parse_system_config(self._load_system_config())
