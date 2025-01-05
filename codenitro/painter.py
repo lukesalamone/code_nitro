@@ -6,6 +6,7 @@ from pygments.formatters import ImageFormatter
 from pygments.lexers import get_lexer_for_filename
 import io
 import math
+import os
 
 
 class Painter:
@@ -38,6 +39,10 @@ class Painter:
         self.code_image = ImageEnhance.Color(code_image).enhance(2)
 
     def add_background_image(self, image_path: str) -> None:
+        image_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), image_path
+        )
+        print("image_path", image_path)
         size = self._calc_canvas_size()
         canvas = Image.new("RGBA", size, (255, 255, 255, 0))
         bg_image = Image.open(image_path).convert("RGBA")
