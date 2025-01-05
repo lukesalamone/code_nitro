@@ -6,45 +6,52 @@ import argparse
 from config import Config
 from painter import Painter
 
+
 def load_from_github(url: str) -> tuple[str, str]:
     def convert_url(url: str):
-        return '/'.join(url.split('/blob/')).replace('github.com/', 'raw.githubusercontent.com/')
+        return "/".join(url.split("/blob/")).replace(
+            "github.com/", "raw.githubusercontent.com/"
+        )
 
-    assert 'github.com' in url, 'input url is not from github'
+    assert "github.com" in url, "input url is not from github"
     url = convert_url(url)
     try:
         response = requests.get(url)
-        fname = url.split('/')[-1]
+        fname = url.split("/")[-1]
         return response.text, fname
     except:
-        print(f'failed to download from url {url}')
-        return '', ''
+        print(f"failed to download from url {url}")
+        return "", ""
+
 
 def load_from_file(fname: str) -> tuple[str, str]:
     with open(fname) as f:
         text = f.read()
     return text, fname
 
+
 def get_range(lines: str) -> tuple[int, int]:
-    scope = lines.split('-')
-    assert len(scope) == 2, 'incorrect format for lines arg'
+    scope = lines.split("-")
+    assert len(scope) == 2, "incorrect format for lines arg"
     start, end = [int(x) for x in scope]
     return start, end
 
+
 def code_to_image(
-        file_input: Union[str, None] = None,
-        text_input: Union[str, None] = None,
-        link_input: Union[str, None] = None,
-        line_range: Union[str, None] = None,
-        theme: str = 'desert',
-        text_style: str = '',
-        background: str = '',
-        gradient_start: str = '',
-        gradient_end: str = '',
-        image_path: str = '',
-        image_pad: int = -1,
-        outpath: str = '',
-        save: bool = True) -> Image.Image:
+    file_input: Union[str, None] = None,
+    text_input: Union[str, None] = None,
+    link_input: Union[str, None] = None,
+    line_range: Union[str, None] = None,
+    theme: str = "desert",
+    text_style: str = "",
+    background: str = "",
+    gradient_start: str = "",
+    gradient_end: str = "",
+    image_path: str = "",
+    image_pad: int = -1,
+    outpath: str = "",
+    save: bool = True,
+) -> Image.Image:
     """
     Convert code from a file, text input, or GitHub link to an image.
 
@@ -65,38 +72,40 @@ def code_to_image(
     """
     if len([x for x in [file_input, text_input, link_input] if x]) != 1:
         raise ValueError(
-            'Exactly one of file_input, text_input, or link_input must be specified.'
+            "Exactly one of file_input, text_input, or link_input must be specified."
         )
 
-    config = Config({
-        'theme':theme,
-        'text_style':text_style,
-        'background':background,
-        'gradient_start':gradient_start,
-        'gradient_end':gradient_end,
-        'image_path':image_path,
-        'image_pad':image_pad
-    })
+    config = Config(
+        {
+            "theme": theme,
+            "text_style": text_style,
+            "background": background,
+            "gradient_start": gradient_start,
+            "gradient_end": gradient_end,
+            "image_path": image_path,
+            "image_pad": image_pad,
+        }
+    )
 
-    fname = 'default_filename.py'
+    fname = "default_filename.py"
     if text_input:
         text = text_input
-        lines = text_input.split('\n')
+        lines = text_input.split("\n")
     else:
         if link_input != None:
             text, fname = load_from_github(link_input)
         else:
             text, fname = load_from_file(file_input)
-        lines = text.split('\n')
+        lines = text.split("\n")
 
-    name_part = '.'.join(fname.split('.')[:-1])
+    name_part = ".".join(fname.split(".")[:-1])
 
     start = 1
     line_count = len(lines)
     if line_range:
         start, end = get_range(line_range)
-        print(f'including only lines in range {start} - {end}')
-        text = '\n'.join(lines[start-1:end])
+        print(f"including only lines in range {start} - {end}")
+        text = "\n".join(lines[start - 1 : end])
 
     painter = Painter(image_pad=config.image_pad)
     painter.add_code_image(
@@ -104,19 +113,18 @@ def code_to_image(
         line_count=line_count,
         text_style=config.text_style,
         filename=fname,
-        line_num_start=start
+        line_num_start=start,
     )
 
     if not outpath:
-        outpath = f'{name_part}.png'
+        outpath = f"{name_part}.png"
 
-    if config.background in ('image', 'gradient'):
-        if config.background == 'image':
+    if config.background in ("image", "gradient"):
+        if config.background == "image":
             painter.add_background_image(image_path=config.image_path)
         else:
             painter.add_background_gradient(
-                gradient_start=config.gradient_start,
-                gradient_end=config.gradient_end
+                gradient_start=config.gradient_start, gradient_end=config.gradient_end
             )
         painter.add_shadow()
         result = painter.squash_layers()
@@ -126,29 +134,38 @@ def code_to_image(
     if not save:
         return result
 
-    with open(outpath, 'wb') as f:
+    with open(outpath, "wb") as f:
         result.save(f)
-        print(f'saved image to {outpath}')
+        print(f"saved image to {outpath}")
 
     return result
 
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('input', type=str, help='the file to use')
-    parser.add_argument('--lines', type=str, help='range of lines to print (defaults to all)')
-    parser.add_argument('--theme', type=str, help='theme to use')
-    parser.add_argument('--text_style', type=str, help='text color scheme')
-    parser.add_argument('--background', type=str, help='image / gradient / none')
-    parser.add_argument('--gradient_start', type=str, help='top left color for gradient, hex format')
-    parser.add_argument('--gradient_end', type=str, help='bottom right color for gradient, hex format')
-    parser.add_argument('--image_path', type=str, help='if background="image", path to background image')
-    parser.add_argument('--image_pad', type=int, help='padding around code in pixels')
+    parser.add_argument("input", type=str, help="the file to use")
+    parser.add_argument(
+        "--lines", type=str, help="range of lines to print (defaults to all)"
+    )
+    parser.add_argument("--theme", type=str, help="theme to use")
+    parser.add_argument("--text_style", type=str, help="text color scheme")
+    parser.add_argument("--background", type=str, help="image / gradient / none")
+    parser.add_argument(
+        "--gradient_start", type=str, help="top left color for gradient, hex format"
+    )
+    parser.add_argument(
+        "--gradient_end", type=str, help="bottom right color for gradient, hex format"
+    )
+    parser.add_argument(
+        "--image_path", type=str, help='if background="image", path to background image'
+    )
+    parser.add_argument("--image_pad", type=int, help="padding around code in pixels")
     args = parser.parse_args()
 
     config = Config(command_line_args=args)
     text_input, link_input, file_input = None, None, None
 
-    if 'http://' in args.input or 'https://' in args.input:
+    if "http://" in args.input or "https://" in args.input:
         link_input = args.input
     else:
         file_input = args.input
@@ -164,12 +181,11 @@ def main():
         gradient_start=config.gradient_start,
         gradient_end=config.gradient_end,
         image_path=config.image_path,
-        image_pad=config.image_pad
+        image_pad=config.image_pad,
     )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 
-__all__ = [
-    'code_to_image'
-]
+__all__ = ["code_to_image"]
