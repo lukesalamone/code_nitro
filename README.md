@@ -34,7 +34,7 @@ nitro nitro.py --lines=40-54 --theme=cool
 
 ## ⭐Features
 
-1. Convert an entire file to an image via command line. Nitro will save it in the same directory with the same name (but with .png).
+1. Convert an entire file to an image via command line. By default, Code Nitro will save it in the same directory with the same name (but with .png).
 
 ```bash
 nitro my_code.py [options]
@@ -50,6 +50,23 @@ nitro my_code.py --lines=5-10
 
 ```bash
 nitro https://github.com/lukesalamone/code_nitro/blob/master/nitro.py
+```
+
+## 🐍 Python API
+
+You can also import `codenitro` and call the exposed `code_to_image()` function programmatically.
+```python
+from codenitro import code_to_image
+
+image = code_to_image(
+    file_input="HelloWorld.java"
+    lines="23-34",
+    save=False # optionally return result rather than saving
+)
+
+print(type(image))
+# "PIL.Image.Image"
+
 ```
 
 ## 🎨 Themes
