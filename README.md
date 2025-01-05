@@ -10,6 +10,13 @@ You can install the `nitro` command with pip.
 pip install codenitro
 ```
 
+## Basic Usage
+The simplest usage is to simply pass a filename. Code Nitro will automatically syntax highlight it based on its extension.
+```bash
+nitro myfile.cpp
+# creates myfile.png
+```
+
 ## 🎬 Examples
 ```bash
 nitro nitro.py --lines=40-54 --theme=desert
